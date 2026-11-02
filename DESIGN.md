@@ -10,7 +10,7 @@ colors:
   glass-stroke: "rgba(255,255,255,0.12)"
   glass-stroke-highlight: "rgba(255,255,255,0.22)"
   text-primary: "rgba(255,255,255,0.96)"
-  text-secondary: "rgba(255,255,255,0.62)"
+  text-secondary: "rgba(255,255,255,0.74)"
   text-tertiary: "rgba(255,255,255,0.60)"
   accent: "#4ADFBF"
   accent-pressed: "#38C2A3"
@@ -28,7 +28,7 @@ colors:
   light-glass-stroke: "rgba(0,0,0,0.08)"
   light-glass-stroke-highlight: "rgba(255,255,255,0.85)"
   light-text-primary: "rgba(12,14,18,0.94)"
-  light-text-secondary: "rgba(12,14,18,0.66)"
+  light-text-secondary: "rgba(12,14,18,0.76)"
   light-text-tertiary: "rgba(12,14,18,0.62)"
   light-accent: "#0D7059"
   light-accent-pressed: "#0A5A48"
@@ -86,36 +86,36 @@ typography:
     letterSpacing: "3sp"
   win-title:
     fontFamily: "Segoe UI Variable Display"
-    fontSize: "21px"
+    fontSize: "22px"
     fontWeight: 600
     letterSpacing: "-0.015em"
   win-headline:
     fontFamily: "Segoe UI Variable Display"
-    fontSize: "17px"
+    fontSize: "18px"
     fontWeight: 600
     letterSpacing: "-0.008em"
   win-body:
     fontFamily: "Segoe UI Variable Text"
-    fontSize: "14.5px"
+    fontSize: "15px"
     fontWeight: 400
     lineHeight: "21px"
   win-callout:
     fontFamily: "Segoe UI Variable Text"
-    fontSize: "13.5px"
+    fontSize: "14px"
     fontWeight: 400
   win-footnote:
     fontFamily: "Segoe UI Variable Text"
-    fontSize: "12.5px"
+    fontSize: "13px"
     fontWeight: 400
     lineHeight: "18px"
   win-caption:
     fontFamily: "Segoe UI Variable Text"
-    fontSize: "11.5px"
+    fontSize: "12px"
     fontWeight: 400
     letterSpacing: "0.012em"
   win-code:
     fontFamily: "Cascadia Mono, Consolas"
-    fontSize: "25px"
+    fontSize: "28px"
     fontWeight: 400
     letterSpacing: "0.15em"
 rounded:
@@ -139,7 +139,7 @@ components:
     backgroundColor: "{colors.accent-brand}"
     textColor: "{colors.win-on-accent}"
     typography: "{typography.win-body}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     height: "46px"
     width: "100%"
   button-primary-hover:
@@ -150,14 +150,14 @@ components:
     backgroundColor: "{colors.win-fill-primary}"
     textColor: "{colors.text-primary}"
     typography: "{typography.win-body}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     height: "46px"
     width: "100%"
   button-quiet:
     backgroundColor: "transparent"
     textColor: "{colors.win-label-secondary}"
     typography: "{typography.win-callout}"
-    rounded: "{rounded.lg}"
+    rounded: "{rounded.sm}"
     height: "44px"
   button-caption:
     backgroundColor: "transparent"
@@ -171,7 +171,7 @@ components:
     textColor: "{colors.win-label-quaternary}"
     typography: "{typography.win-caption}"
     rounded: "{rounded.lg}"
-    padding: "5px 12px 5px 10px"
+    padding: "4px 12px 4px 8px"
   code-field:
     backgroundColor: "{colors.win-fill-secondary}"
     textColor: "{colors.text-primary}"
@@ -244,8 +244,10 @@ saturated teal and two status hues.
 
 - **Relay Teal** (`accent`): the one accent. It marks the single most important
   interactive thing on a screen — the primary button, the scanning reticle, the
-  focus ring, the connected halo — and a faint radial bloom of it at 5% alpha
-  sits behind the Android background gradient. If two things on a screen are
+  focus ring — and nothing else. A faint radial bloom of it behind the Android
+  background, and the Windows connected halo (three nested translucent circles
+  with a breathing opacity), were both removed: they spread the accent over
+  decoration instead of the one thing to do. If two things on a screen are
   accented, one of them is wrong.
 - **Relay Teal, Pressed** (`accent-pressed`): the pressed state of the accent.
 - **Relay Teal, Whisper** (`accent-subtle`, 16% alpha): accent-tinted fills
@@ -275,7 +277,7 @@ saturated teal and two status hues.
 - **Glass Stroke / Stroke Highlight** (12% / 22% white): the 1px border, drawn as
   a vertical gradient from highlight at the top to plain stroke below, which is
   what reads as a specular edge.
-- **Label ramp** (`text-primary` 96% → `text-secondary` 62% → `text-tertiary`
+- **Label ramp** (`text-primary` 96% → `text-secondary` 74% → `text-tertiary`
   60%): three levels of white on Android. Windows runs a four-level ramp of its
   own (96% / 72% / 54% / 36%) tuned against its scrim rather than against a
   system background.
@@ -398,14 +400,14 @@ Shared scale (`shared/design-tokens.json`, implemented in Compose):
 
 Windows runs a finer, popover-scaled ramp of its own (`Styles/Tokens.xaml`):
 
-- **Title** (SemiBold, 21, −15/1000 em): the app name in the header.
-- **Headline** (SemiBold, 17, −8/1000 em, centred): the sentence that names the
+- **Title** (SemiBold, 22, −15/1000 em): the app name in the header.
+- **Headline** (SemiBold, 18, −8/1000 em, centred): the sentence that names the
   current state.
-- **Body** (Regular, 14.5, 21 line-height, centred): explanatory prose.
-- **Callout** (Regular, 13.5): quiet text actions.
-- **Footnote** (Regular, 12.5, 18 line-height): hints beneath a control.
-- **Caption** (Regular, 11.5, +12/1000 em): chips and column headers.
-- **Code** (Cascadia Mono, 25, +150 character spacing): the typed pairing code.
+- **Body** (Regular, 15, 21 line-height, centred): explanatory prose.
+- **Callout** (Regular, 14): quiet text actions.
+- **Footnote** (Regular, 13, 18 line-height): hints beneath a control.
+- **Caption** (Regular, 12, +12/1000 em): chips and column headers.
+- **Code** (Cascadia Mono, 28, +150 character spacing): the typed pairing code.
 
 ### Named Rules
 
@@ -420,8 +422,7 @@ phone showing `42` reads as "these two apps do not go together".
 ## Layout
 
 **Android** is a full-screen Compose surface: a vertical background gradient
-(top → base → bottom) with a faint accent radial bloom at the top centre, and
-glass panels floating on it.
+(top → base → bottom) and glass panels floating on it.
 
 **Windows** is a tray popover, and its geometry is the system's most specific
 constraint: 380dip wide, summoned from the notification area, dismissed on focus
@@ -431,7 +432,7 @@ between **340 and 640dip**, clamped to the display's work area. A popover is the
 size of its content; a fixed height also broke outright at 175% scaling by
 exceeding the work area on a non-resizable window. Everything sits inside a
 scroller with a 12px right gutter reserved for WinUI's overlay scrollbar, and the
-window padding is `20,16,20,18`.
+window padding is `20,16,20,16`.
 
 Corner placement follows flow direction: bottom-left under RTL (where the RTL
 notification area lives), bottom-right otherwise. Content mirrors for RTL; the
@@ -444,13 +445,15 @@ however small the label; primary buttons are **46px** tall.
 ## Elevation & Depth
 
 **There are no drop shadows in this system.** Depth is entirely material:
-translucency, a light-from-above gradient fill, and a 1px border drawn as a
+translucency, a flat fill, and a 1px border drawn as a
 vertical gradient from `glass-stroke-highlight` at the top to `glass-stroke`
 below, which reads as a specular edge catching a single consistent light source.
 
 Two levels exist, and only two: `glass-fill` (6%) at rest and `glass-fill-raised`
-(9%) for the surface that is currently the subject. Within a panel, the fill
-gradient runs from the fill alpha plus 0.03 down to the fill alpha.
+(9%) for the surface that is currently the subject. The fill is one flat colour:
+the diagonal fill gradient that used to run from the fill alpha plus 0.03 down to
+the fill alpha added a second highlight on top of the specular edge, and was
+removed.
 
 On Windows the acrylic backdrop *is* the glass, and everything above it is an
 opaque-enough fill from the four-level fill ramp. Every glass token needs a solid
@@ -495,7 +498,7 @@ above becomes an instant state change.
 
 Soft, continuous and concentric. The scale is 8 / 12 / 16 / 24 / pill in the
 shared tokens; Windows names the same values by role — window 12, control 12,
-card 16, pill 24, sunken 10, caption button 7.
+card 16, pill 24, sunken 10, caption button 8.
 
 **Borders** are always 1px, and on glass they are a gradient rather than a flat
 colour. Cards on Windows use the flat `SeparatorBrush`; interactive surfaces use
@@ -519,8 +522,10 @@ Three roles, defined once in tokens, and they must not look interchangeable:
 the accent one is the thing to do, the plain one is the way out, the quiet one
 is a text-weight action that cannot compete with either.
 
-- **Shape:** fully rounded pill (24px radius), full width, 46px tall with a 44px
-  minimum target.
+- **Shape:** control radius (12px), full width, 46px tall with a 44px minimum
+  target. Only the status chip below is a pill: a button that is a pill on a
+  46px bar, in a window where every other control is also a pill, stops
+  telling the controls apart.
 - **Primary:** accent fill, `win-on-accent` (`#05201B`) label, no border,
   SemiBold body size. One per screen.
 - **Secondary:** `win-fill-primary` fill, primary label, hairline border, Regular
@@ -543,7 +548,7 @@ is a text-weight action that cannot compete with either.
 ### Status chip (signature component)
 
 The system's most characteristic control. A pill (24px radius, `win-fill-tertiary`
-fill, `10,5,12,5` padding) containing an 8px dot and the word — Idle /
+fill, `8,4,12,4` padding) containing an 8px dot and the word — Idle /
 Connecting / Connected / Reconnecting — in caption type. It replaced a bare
 coloured dot, and the replacement is doctrine: colour reinforces the word, it
 never carries the state alone. Since 2.11 it also says *Problem* on an error
@@ -564,7 +569,7 @@ beside its dot.
 
 - **Style:** sunken rather than raised — `win-fill-secondary` fill, hairline
   border, 12px radius, 64px tall for the code field, centred content.
-- **The code field** is 2 characters wide, mono, 25px, +150 character spacing,
+- **The code field** is 2 characters wide, mono, 28px, +150 character spacing,
   with a numeric input scope.
 - **Validation is live:** every keystroke is checked, and three failures are
   distinguished by message (character outside the alphabet, too short with the

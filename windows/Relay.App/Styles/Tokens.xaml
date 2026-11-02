@@ -30,6 +30,10 @@
          purpose, so the same foreground pairs keep their contrast. -->
     <SolidColorBrush x:Key="WindowSolidBrush" Color="#FF12161D" />
 
+    <!-- The ground behind the camera preview: opaque, so a frame that has not
+         arrived yet is a dark card rather than the wallpaper showing through. -->
+    <SolidColorBrush x:Key="ScanBackdropBrush" Color="#FF14171D" />
+
     <SolidColorBrush x:Key="LabelPrimary"   Color="#F5FFFFFF" />
     <SolidColorBrush x:Key="LabelSecondary" Color="#B8FFFFFF" />
     <SolidColorBrush x:Key="LabelTertiary"  Color="#8AFFFFFF" />
@@ -46,14 +50,11 @@
     <!-- One accent. If two things on a screen are accented, one of them is wrong. -->
     <Color x:Key="AccentColor">#4ADFBF</Color>
     <SolidColorBrush x:Key="AccentBrush"        Color="#4ADFBF" />
-    <SolidColorBrush x:Key="AccentSoftBrush"    Color="#334ADFBF" />
-    <SolidColorBrush x:Key="AccentFaintBrush"   Color="#1A4ADFBF" />
     <SolidColorBrush x:Key="OnAccentBrush"      Color="#05201B" />
 
     <SolidColorBrush x:Key="WarningBrush"     Color="#F5B95F" />
     <SolidColorBrush x:Key="WarningSoftBrush" Color="#1FF5B95F" />
     <SolidColorBrush x:Key="DangerBrush"      Color="#FF7A75" />
-    <SolidColorBrush x:Key="DangerSoftBrush"  Color="#1FFF7A75" />
 
     <!-- Interaction overlays, applied over whatever the control's own fill is. -->
     <SolidColorBrush x:Key="OverlayHover"   Color="#1FFFFFFF" />
@@ -69,13 +70,16 @@
     <FontFamily x:Key="FontText">Segoe UI Variable Text</FontFamily>
     <FontFamily x:Key="FontMono">Cascadia Mono, Consolas</FontFamily>
 
-    <x:Double x:Key="SizeTitle">21</x:Double>
-    <x:Double x:Key="SizeHeadline">17</x:Double>
-    <x:Double x:Key="SizeBody">14.5</x:Double>
-    <x:Double x:Key="SizeCallout">13.5</x:Double>
-    <x:Double x:Key="SizeFootnote">12.5</x:Double>
-    <x:Double x:Key="SizeCaption">11.5</x:Double>
-    <x:Double x:Key="SizeCode">25</x:Double>
+    <!-- Whole pixels only. The ramp used to run in half steps (21, 17, 14.5,
+         13.5, 12.5, 11.5, 25): seven sizes that sat a pixel apart and read as
+         one size set unevenly. Same seven roles, now evenly spaced. -->
+    <x:Double x:Key="SizeTitle">22</x:Double>
+    <x:Double x:Key="SizeHeadline">18</x:Double>
+    <x:Double x:Key="SizeBody">15</x:Double>
+    <x:Double x:Key="SizeCallout">14</x:Double>
+    <x:Double x:Key="SizeFootnote">13</x:Double>
+    <x:Double x:Key="SizeCaption">12</x:Double>
+    <x:Double x:Key="SizeCode">28</x:Double>
 
     <!-- Tracking is in 1/1000 em. Negative on display sizes, ~0 at body,
          positive on the smallest text so it does not clot. -->
@@ -93,6 +97,8 @@
     <x:Double x:Key="RadiusControl">12</x:Double>
     <x:Double x:Key="RadiusPill">24</x:Double>
     <CornerRadius x:Key="CardCorner">16</CornerRadius>
+    <!-- Inside a card with a 1px border: the card's radius minus the border. -->
+    <CornerRadius x:Key="CardInnerCorner">15</CornerRadius>
     <CornerRadius x:Key="ControlCorner">12</CornerRadius>
     <CornerRadius x:Key="PillCorner">24</CornerRadius>
     <CornerRadius x:Key="SunkenCorner">10</CornerRadius>
@@ -106,7 +112,7 @@
     <x:Double x:Key="Space6">24</x:Double>
     <x:Double x:Key="Space8">32</x:Double>
 
-    <Thickness x:Key="WindowPadding">20,16,20,18</Thickness>
+    <Thickness x:Key="WindowPadding">20,16,20,16</Thickness>
 
     <!-- Pointer targets never go below 44px, whatever the label size. -->
     <x:Double x:Key="TargetMin">44</x:Double>
@@ -118,7 +124,10 @@
          "quiet" role carries destructive/secondary text actions. -->
 
     <Style x:Key="ButtonBase" TargetType="Button">
-        <Setter Property="CornerRadius" Value="{StaticResource PillCorner}" />
+        <!-- A 46px button with a 24 radius is a pill, and so was every other
+             control. Buttons take the control radius; only the status chip,
+             which is a small tag, keeps the pill. -->
+        <Setter Property="CornerRadius" Value="{StaticResource ControlCorner}" />
         <!-- A floor, not a fixed height: Windows' Text size setting scales the
              label, and a fixed 46 clipped it (docs/ux-audit.md P-30). -->
         <Setter Property="MinHeight" Value="{StaticResource ButtonHeight}" />
@@ -229,7 +238,7 @@
         <Setter Property="Width" Value="32" />
         <Setter Property="Height" Value="28" />
         <Setter Property="Padding" Value="0" />
-        <Setter Property="CornerRadius" Value="7" />
+        <Setter Property="CornerRadius" Value="8" />
         <Setter Property="FontFamily" Value="Segoe Fluent Icons, Segoe MDL2 Assets" />
         <Setter Property="FontSize" Value="11" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
@@ -289,6 +298,16 @@
         <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
         <Setter Property="FontSize" Value="{StaticResource SizeFootnote}" />
         <Setter Property="Foreground" Value="{StaticResource LabelTertiary}" />
+    </Style>
+
+    <!-- The live rates on the connected screen: the figures that answer "is it
+         working right now", so they are the largest thing on it. Mono, which
+         keeps the digits a fixed width as they change. -->
+    <Style x:Key="FigureText" TargetType="TextBlock">
+        <Setter Property="FontFamily" Value="{StaticResource FontMono}" />
+        <Setter Property="FontSize" Value="{StaticResource SizeHeadline}" />
+        <Setter Property="Foreground" Value="{StaticResource LabelPrimary}" />
+        <Setter Property="TextWrapping" Value="NoWrap" />
     </Style>
 
 </ResourceDictionary>

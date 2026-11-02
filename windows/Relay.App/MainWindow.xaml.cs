@@ -60,7 +60,6 @@ public sealed partial class MainWindow : Window
     private FrameworkElement? _visiblePanel;
     private string? _errorAction;
     private bool _shown;
-    private bool _pulsing;
 
     /// <summary>Kept so the window can stop floating once it stops being transient.</summary>
     private OverlappedPresenter? _presenter;
@@ -804,14 +803,10 @@ public sealed partial class MainWindow : Window
                 : $"{payload.Host}:{payload.Port} · {Strings.Get(link)}";
             ReconnectingText.Text = Strings.Get("Reconnecting");
             ReconnectingBanner.Visibility = Show(reconnecting);
+            // Solid, and amber while reconnecting. Nothing pulses here any more:
+            // the dot used to sit in a breathing halo, which signalled "alive"
+            // whether or not the link was carrying anything.
             ConnectedDot.Fill = ThemeBrush(reconnecting ? "WarningBrush" : "AccentBrush");
-            // The halo breathes only while the link is healthy; during a
-            // reconnect it holds still, so "working on it" and "working" are
-            // not signalled by the same movement. Started once on entry rather
-            // than on every Render: restarting a looping animation snaps it back
-            // to its first keyframe, which reads as a stutter every time an
-            // unrelated state notification arrives.
-            SetPulsing(!reconnecting);
         }
         if (state == "Error") ApplyError(_controller.ErrorCode ?? string.Empty);
 
@@ -839,8 +834,6 @@ public sealed partial class MainWindow : Window
                 other.Visibility = Visibility.Collapsed;
             }
         }
-
-        if (!ReferenceEquals(panel, ConnectedPanel)) SetPulsing(false);
 
         // Measure *after* the swap, not alongside it: the outgoing panel is
         // still laid out during its fade, so resizing now would size the window
@@ -934,13 +927,6 @@ public sealed partial class MainWindow : Window
         {
             // Accessibility plumbing must never be why the window fails.
         }
-    }
-
-    private void SetPulsing(bool on)
-    {
-        if (on == _pulsing) return;
-        _pulsing = on;
-        if (on) Motion.StartPulse(ConnectedHalo, 0.5); else Motion.StopPulse(ConnectedHalo);
     }
 
     private void SetStatusChip(string brushKey, string label)

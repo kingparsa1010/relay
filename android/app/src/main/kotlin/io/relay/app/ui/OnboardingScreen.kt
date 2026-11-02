@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -150,6 +151,9 @@ fun OnboardingScreen(
         Button(
             onClick = onDone,
             modifier = Modifier.fillMaxWidth().height(52.dp),
+            // Material's Button is a full pill by default; the app's own buttons
+            // use the shared control radius.
+            shape = RoundedCornerShape(glass.radiusSm),
             colors = ButtonDefaults.buttonColors(
                 containerColor = glass.accent,
                 contentColor = glass.onAccent,
@@ -171,7 +175,7 @@ private fun StepRow(number: Int, step: OnboardingStep) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .glassPanel(radius = 20.dp)
+            .glassPanel(radius = glass.radiusMd)
             .padding(16.dp),
         verticalAlignment = Alignment.Top,
     ) {
@@ -179,8 +183,10 @@ private fun StepRow(number: Int, step: OnboardingStep) {
         // already done says so on its action instead.
         Surface(
             shape = CircleShape,
-            color = if (step.action == StepAction.Done) glass.accent else glass.accentSubtle,
-            modifier = Modifier.size(26.dp),
+            // Accent marks what is done, not what is numbered: five accented
+            // circles made every step look equally like the one to press.
+            color = if (step.action == StepAction.Done) glass.accent else glass.fillRaised,
+            modifier = Modifier.size(24.dp),
         ) {
             Box(contentAlignment = Alignment.Center) {
                 Text(
@@ -189,12 +195,12 @@ private fun StepRow(number: Int, step: OnboardingStep) {
                     text = if (step.action == StepAction.Done) "✓" else String.format(Locale.getDefault(), "%d", number),
                     style = MaterialTheme.typography.labelSmall,
                     fontWeight = FontWeight.SemiBold,
-                    color = if (step.action == StepAction.Done) glass.onAccent else glass.accent,
+                    color = if (step.action == StepAction.Done) glass.onAccent else glass.textSecondary,
                 )
             }
         }
 
-        Spacer(Modifier.width(14.dp))
+        Spacer(Modifier.width(16.dp))
 
         Column(Modifier.weight(1f)) {
             Text(
@@ -203,7 +209,7 @@ private fun StepRow(number: Int, step: OnboardingStep) {
                 fontWeight = FontWeight.SemiBold,
                 color = glass.textPrimary,
             )
-            Spacer(Modifier.height(3.dp))
+            Spacer(Modifier.height(4.dp))
             Text(
                 text = step.body,
                 style = MaterialTheme.typography.bodySmall,
@@ -213,7 +219,7 @@ private fun StepRow(number: Int, step: OnboardingStep) {
             when (step.action) {
                 // Something to press: the platform will do the asking.
                 StepAction.Offer -> {
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(8.dp))
                     TextButton(
                         onClick = step.onAction,
                         contentPadding = androidx.compose.foundation.layout.PaddingValues(0.dp),
@@ -235,12 +241,14 @@ private fun StepRow(number: Int, step: OnboardingStep) {
                 // also was not a button in any useful sense: pressing it only
                 // repeated the same sentence in a toast.
                 StepAction.Instruct -> {
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(8.dp))
+                    // An instruction, not an action: the Offer step above is the
+                    // only thing here that gets the accent.
                     Text(
                         step.actionLabel,
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Medium,
-                        color = glass.accent,
+                        color = glass.textSecondary,
                     )
                 }
                 StepAction.Done -> Unit

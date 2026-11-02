@@ -16,6 +16,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -62,7 +63,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.StrokeJoin
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -324,12 +329,38 @@ private fun reducedMotion(): Boolean {
     }
 }
 
-/** A disclosure arrow that points the way the reading direction goes. */
+/**
+ * A disclosure chevron that points the way the reading direction goes.
+ *
+ * Drawn rather than typed. ▸ ▾ ◂ are font glyphs: their size, weight and
+ * baseline change with the device's font, and talkback read them aloud as
+ * "black right-pointing small triangle".
+ */
 @Composable
-private fun disclosure(expanded: Boolean): String = when {
-    expanded -> "▾"
-    LocalLayoutDirection.current == LayoutDirection.Rtl -> "◂"
-    else -> "▸"
+private fun DisclosureChevron(expanded: Boolean, color: Color) {
+    val rtl = LocalLayoutDirection.current == LayoutDirection.Rtl
+    Canvas(Modifier.size(12.dp)) {
+        val w = size.width
+        val h = size.height
+        val path = Path().apply {
+            when {
+                expanded -> {
+                    moveTo(w * 0.2f, h * 0.35f); lineTo(w * 0.5f, h * 0.65f); lineTo(w * 0.8f, h * 0.35f)
+                }
+                rtl -> {
+                    moveTo(w * 0.65f, h * 0.2f); lineTo(w * 0.35f, h * 0.5f); lineTo(w * 0.65f, h * 0.8f)
+                }
+                else -> {
+                    moveTo(w * 0.35f, h * 0.2f); lineTo(w * 0.65f, h * 0.5f); lineTo(w * 0.35f, h * 0.8f)
+                }
+            }
+        }
+        drawPath(
+            path = path,
+            color = color,
+            style = Stroke(width = 1.5.dp.toPx(), cap = StrokeCap.Round, join = StrokeJoin.Round),
+        )
+    }
 }
 
 /** Keeps an embedded run (a name, an address, a number) from reordering its sentence. */
@@ -371,7 +402,7 @@ private fun StatusDot(state: ConnectionState) {
     val color by animateColorAsState(targetColor, tween(300), label = "dotColor")
     Box(
         modifier = Modifier
-            .size(10.dp)
+            .size(8.dp)
             .alpha(alpha)
             .background(color, CircleShape),
     )
@@ -416,7 +447,7 @@ private fun WarningBanners(
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(10.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 Box(
                     Modifier.size(8.dp).background(
@@ -435,7 +466,7 @@ private fun WarningBanners(
                 style = MaterialTheme.typography.bodySmall,
                 color = glass.textSecondary,
             )
-            Spacer(Modifier.height(10.dp))
+            Spacer(Modifier.height(12.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
@@ -464,17 +495,24 @@ private fun WarningBanners(
  * one thing to do (DESIGN.md → One Accent Rule).
  */
 @Composable
-private fun QuietAction(text: String, onClick: () -> Unit) {
+private fun QuietAction(text: String, expanded: Boolean? = null, onClick: () -> Unit) {
     val glass = LocalGlass.current
-    Text(
-        text = text,
-        style = MaterialTheme.typography.bodySmall,
-        color = glass.textSecondary,
+    Row(
         modifier = Modifier
             .clickable(role = Role.Button, onClick = onClick)
             .minimumInteractiveComponentSize()
             .padding(horizontal = 4.dp),
-    )
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+    ) {
+        // Non-null only for actions that fold something open or shut.
+        if (expanded != null) DisclosureChevron(expanded, glass.textSecondary)
+        Text(
+            text = text,
+            style = MaterialTheme.typography.bodySmall,
+            color = glass.textSecondary,
+        )
+    }
 }
 
 // --- panels ------------------------------------------------------------------
@@ -542,7 +580,7 @@ private fun PreparingPanel() {
         )
         // This can take several seconds while a link is still getting an
         // address (LinkWait), and a word that only pulses gives no reason.
-        Spacer(Modifier.height(6.dp))
+        Spacer(Modifier.height(8.dp))
         Text(
             text = stringResource(R.string.preparing_hint),
             style = MaterialTheme.typography.bodySmall,
@@ -653,7 +691,7 @@ private fun PairingPanel(
                 style = MaterialTheme.typography.labelSmall,
                 color = glass.textTertiary,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = shortCode,
                 style = MaterialTheme.typography.displayLarge,
@@ -666,7 +704,7 @@ private fun PairingPanel(
                     .semantics { contentDescription = shortCode.toList().joinToString(" ") },
                 textAlign = TextAlign.Center,
             )
-            Spacer(Modifier.height(6.dp))
+            Spacer(Modifier.height(8.dp))
             Text(
                 text = stringResource(R.string.short_code_hint),
                 style = MaterialTheme.typography.labelSmall,
@@ -804,7 +842,7 @@ private fun ConnectedPanel(
             RateColumn(R.string.connected_down, downRate, Modifier.weight(1f))
             RateColumn(R.string.connected_up, upRate, Modifier.weight(1f))
         }
-        Spacer(Modifier.height(10.dp))
+        Spacer(Modifier.height(12.dp))
         Text(
             text = stringResource(
                 R.string.connected_totals,
@@ -819,9 +857,10 @@ private fun ConnectedPanel(
         SubtleButton(text = stringResource(R.string.action_stop), onClick = onStop)
         Spacer(Modifier.height(8.dp))
         QuietAction(
-            "${disclosure(showCode)}  " + stringResource(
+            stringResource(
                 if (showCode) R.string.connected_hide_code else R.string.connected_show_code,
             ),
+            expanded = showCode,
             onClick = onToggleCode,
         )
     }
@@ -928,7 +967,8 @@ private fun ErrorPanel(
         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             QuietAction(stringResource(R.string.action_dismiss), onClick = onDismiss)
             QuietAction(
-                "${disclosure(details)}  " + stringResource(R.string.error_details),
+                stringResource(R.string.error_details),
+                expanded = details,
                 onClick = { details = !details },
             )
         }
@@ -980,9 +1020,9 @@ private fun UsbOffer(onTurnOn: () -> Unit, onDismiss: () -> Unit) {
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(10.dp),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Box(Modifier.size(8.dp).background(glass.accent, CircleShape))
+            Box(Modifier.size(8.dp).background(glass.textTertiary, CircleShape))
             Text(
                 stringResource(R.string.usb_offer_title),
                 style = MaterialTheme.typography.bodyMedium,
@@ -995,7 +1035,7 @@ private fun UsbOffer(onTurnOn: () -> Unit, onDismiss: () -> Unit) {
             style = MaterialTheme.typography.bodySmall,
             color = glass.textSecondary,
         )
-        Spacer(Modifier.height(14.dp))
+        Spacer(Modifier.height(16.dp))
         Row(
             modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
@@ -1098,10 +1138,7 @@ private fun AdvancedSection(
         if (expanded && upstreamProxy.isEmpty()) onScanForProxy()
     }
     Column(Modifier.fillMaxWidth()) {
-        Text(
-            text = "${disclosure(expanded)}  " + stringResource(R.string.advanced),
-            style = MaterialTheme.typography.labelSmall,
-            color = glass.textTertiary,
+        Row(
             modifier = Modifier
                 .clickable(
                     role = Role.Button,
@@ -1109,7 +1146,16 @@ private fun AdvancedSection(
                 ) { expanded = !expanded }
                 .minimumInteractiveComponentSize()
                 .padding(8.dp),
-        )
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            DisclosureChevron(expanded, glass.textTertiary)
+            Text(
+                text = stringResource(R.string.advanced),
+                style = MaterialTheme.typography.labelSmall,
+                color = glass.textTertiary,
+            )
+        }
         AnimatedVisibility(
             visible = expanded,
             enter = fadeIn(tween(200)) + expandVertically(spring(stiffness = Spring.StiffnessMediumLow)),
@@ -1149,7 +1195,7 @@ private fun AdvancedSection(
                         style = MaterialTheme.typography.bodySmall,
                         color = glass.textTertiary,
                     )
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(8.dp))
                     // Automatic is the default since 2.10.0 (ADR-0011): the
                     // phone's route while Relay is inside the VPN, the VPN's
                     // own proxy while it is not. A typed address below beats
@@ -1172,14 +1218,14 @@ private fun AdvancedSection(
                                 RouteChoice.Why.AUTOMATIC_OFF -> stringResource(R.string.advanced_route_now_phone)
                             },
                             style = MaterialTheme.typography.labelSmall,
-                            color = if (currentRoute.why == RouteChoice.Why.NO_PROXY) glass.textSecondary else glass.accent,
+                            color = glass.textSecondary,
                         )
                     }
                     // A typed proxy is for the few who need to pin one, so the
                     // field stays folded away unless one is already set.
                     var manual by rememberSaveable { mutableStateOf(upstreamProxy.isNotEmpty()) }
                     Spacer(Modifier.height(2.dp))
-                    QuietAction("${disclosure(manual)}  " + stringResource(R.string.advanced_upstream_manual)) {
+                    QuietAction(stringResource(R.string.advanced_upstream_manual), expanded = manual) {
                         manual = !manual
                     }
                     val usable = Settings.isUsableProxy(upstreamProxy)
@@ -1189,7 +1235,7 @@ private fun AdvancedSection(
                         style = MaterialTheme.typography.bodySmall,
                         color = glass.textTertiary,
                     )
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(8.dp))
                     BasicTextField(
                         value = upstreamProxy,
                         onValueChange = onSetUpstreamProxy,
@@ -1203,7 +1249,7 @@ private fun AdvancedSection(
                         modifier = Modifier
                             .fillMaxWidth()
                             .glassPanel(radius = 12.dp)
-                            .padding(horizontal = 12.dp, vertical = 10.dp),
+                            .padding(horizontal = 12.dp, vertical = 12.dp),
                         decorationBox = { field ->
                             if (upstreamProxy.isEmpty()) {
                                 Text(
@@ -1237,7 +1283,7 @@ private fun AdvancedSection(
                     // setting that changes where packets go, and opening a
                     // section is not consent to reroute a connection.
                     if (upstreamProxy.isEmpty()) {
-                        Spacer(Modifier.height(6.dp))
+                        Spacer(Modifier.height(8.dp))
                         when (proxyScan) {
                             is ProxyScan.State.Idle -> Unit
 
@@ -1339,7 +1385,7 @@ private fun AdvancedSection(
                                 .padding(4.dp),
                         )
                     }
-                    Spacer(Modifier.height(6.dp))
+                    Spacer(Modifier.height(8.dp))
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -1416,11 +1462,11 @@ private fun ThemeChip(value: String, labelRes: Int, current: String, onSet: (Str
     val selected = value == current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
+            .clip(RoundedCornerShape(glass.radiusXs))
             .background(if (selected) glass.accentSubtle else Color.Transparent)
             .selectable(selected = selected, role = Role.RadioButton) { onSet(value) }
             .minimumInteractiveComponentSize()
-            .padding(horizontal = 14.dp, vertical = 6.dp),
+            .padding(horizontal = 16.dp, vertical = 8.dp),
     ) {
         Text(
             stringResource(labelRes),
@@ -1435,11 +1481,11 @@ private fun PrimaryButton(text: String, enabled: Boolean = true, onClick: () -> 
     val glass = LocalGlass.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
+            .clip(RoundedCornerShape(glass.radiusSm))
             .background(if (enabled) glass.accent else glass.accent.copy(alpha = 0.35f))
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .minimumInteractiveComponentSize()
-            .padding(horizontal = 32.dp, vertical = 14.dp),
+            .padding(horizontal = 32.dp, vertical = 16.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -1455,12 +1501,12 @@ private fun SubtleButton(text: String, enabled: Boolean = true, onClick: () -> U
     val glass = LocalGlass.current
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
-            .glassPanel(radius = 999.dp)
+            .clip(RoundedCornerShape(glass.radiusSm))
+            .glassPanel(radius = glass.radiusSm)
             .alpha(if (enabled) 1f else 0.5f)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick)
             .minimumInteractiveComponentSize()
-            .padding(horizontal = 24.dp, vertical = 10.dp),
+            .padding(horizontal = 24.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(text, style = MaterialTheme.typography.bodyMedium, color = glass.textPrimary)

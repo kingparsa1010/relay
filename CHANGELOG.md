@@ -9,6 +9,22 @@ Artifacts for every version are on the
 
 ## [Unreleased]
 
+### Changed
+
+- **A visual polish pass on both apps, no behaviour or copy changes.** The
+  accent no longer spreads over decoration: the faint teal wash behind the
+  Android background is gone, and so is the Windows connected screen's glowing,
+  breathing halo (and the matching one on the error screen). Both now show a
+  single solid status dot beside the headline, and the live download and upload
+  rates are the largest thing on the connected screen. Glass panels on Android
+  use one flat fill instead of a diagonal gradient. Buttons and chips are no
+  longer all full pills. Spacing sits on the 4px grid, the Windows type ramp
+  uses whole pixels, and the Android disclosure arrows are drawn instead of
+  typed. Android's secondary text is now clearly lighter than tertiary
+  (74% against 60%; it was 62% against 60%), and the two-digit pairing code has
+  its own style in the shared scale instead of falling through to Material's
+  default. Contrast stays above 4.5:1 everywhere.
+
 ### Documentation
 
 - **READMEs redesigned** in both languages: a "how it works" diagram, feature

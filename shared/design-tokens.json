@@ -12,7 +12,7 @@
       "glassStrokeHighlight": "rgba(255,255,255,0.22)",
       "glassInnerGlow": "rgba(255,255,255,0.04)",
       "textPrimary": "rgba(255,255,255,0.96)",
-      "textSecondary": "rgba(255,255,255,0.62)",
+      "textSecondary": "rgba(255,255,255,0.74)",
       "textTertiary": "rgba(255,255,255,0.60)",
       "accent": "#4ADFBF",
       "accentPressed": "#38C2A3",
@@ -32,7 +32,7 @@
       "glassStrokeHighlight": "rgba(255,255,255,0.85)",
       "glassInnerGlow": "rgba(255,255,255,0.35)",
       "textPrimary": "rgba(12,14,18,0.94)",
-      "textSecondary": "rgba(12,14,18,0.66)",
+      "textSecondary": "rgba(12,14,18,0.76)",
       "textTertiary": "rgba(12,14,18,0.62)",
       "accent": "#0D7059",
       "accentPressed": "#0A5A48",
@@ -70,7 +70,8 @@
       "body": { "size": 15, "lineHeight": 22, "weight": 400 },
       "bodySmall": { "size": 14, "lineHeight": 21, "weight": 400, "$comment": "Explanatory paragraphs: warnings, hints, onboarding. Caption (12) is for labels, never for a paragraph -- at 12/16 Persian sits too tight and a long paragraph is hard work at any scale (docs/ux-audit.md P-29)." },
       "caption": { "size": 12, "lineHeight": 16, "weight": 400 },
-      "pairingCode": { "size": 28, "lineHeight": 36, "weight": 500, "features": ["tabular-numbers", "letter-spacing:0.12em"] }
+      "pairingCode": { "size": 28, "lineHeight": 36, "weight": 500, "features": ["tabular-numbers", "letter-spacing:0.12em"] },
+      "shortCode": { "size": 56, "lineHeight": 64, "weight": 500, "features": ["tabular-numbers", "letter-spacing:0.08em"], "$comment": "The two digits the PC needs: the one figure the pairing screen is about. Android used to fall through to Material's default displayLarge for it, so the most important number had no style of its own." }
     }
   }
 }
