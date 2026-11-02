@@ -44,7 +44,6 @@ data class GlassColors(
     val onAccent: Color,
     val isDark: Boolean,
 ) {
-    val radiusXs = 8.dp
     val radiusSm = 12.dp
     val radiusMd = 16.dp
     val radiusLg = 24.dp
@@ -59,9 +58,7 @@ internal val DarkGlass = GlassColors(
     stroke = Color.White.copy(alpha = 0.12f),
     strokeHighlight = Color.White.copy(alpha = 0.22f),
     textPrimary = Color.White.copy(alpha = 0.96f),
-    // 0.74, not 0.62: at 0.62 secondary sat 2 points above tertiary (0.60), so
-    // the three text roles read as two and hierarchy rested on size alone.
-    textSecondary = Color.White.copy(alpha = 0.74f),
+    textSecondary = Color.White.copy(alpha = 0.62f),
     // ~3.4:1 at 0.38 over the dark glass; 0.60 reaches ~5.4:1.
     textTertiary = Color.White.copy(alpha = 0.60f),
     // #4ADFBF, not #45D6B8. The two coexisted: the token file and this theme
@@ -90,9 +87,7 @@ internal val LightGlass = GlassColors(
     stroke = Color.Black.copy(alpha = 0.08f),
     strokeHighlight = Color.White.copy(alpha = 0.85f),
     textPrimary = Color(0xFF0C0E12).copy(alpha = 0.94f),
-    // 0.76 for the same reason as dark: 0.66 against tertiary's 0.62 was one
-    // role in two weights.
-    textSecondary = Color(0xFF0C0E12).copy(alpha = 0.76f),
+    textSecondary = Color(0xFF0C0E12).copy(alpha = 0.66f),
     // 0.36 alpha over the light glass panel composited to ~2.4:1 — below the
     // 4.5:1 AA floor for the 12sp labels this token carries (every caption,
     // hint and log line). 0.62 lands at ~5.0:1 and still reads as tertiary.
@@ -114,12 +109,6 @@ internal val LightGlass = GlassColors(
 val LocalGlass = staticCompositionLocalOf { DarkGlass }
 
 private val glassTypography = Typography(
-    // The two-digit pairing code (shared scale: shortCode). Tabular so the
-    // digits keep their width as the code changes between sessions.
-    displayLarge = TextStyle(
-        fontSize = 56.sp, lineHeight = 64.sp, fontWeight = FontWeight.Medium,
-        letterSpacing = 4.sp, fontFeatureSettings = "tnum",
-    ),
     displaySmall = TextStyle(fontSize = 34.sp, lineHeight = 40.sp, fontWeight = FontWeight.SemiBold),
     titleLarge = TextStyle(fontSize = 22.sp, lineHeight = 28.sp, fontWeight = FontWeight.SemiBold),
     bodyMedium = TextStyle(fontSize = 15.sp, lineHeight = 22.sp, fontWeight = FontWeight.Normal),

@@ -9,7 +9,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -24,12 +26,15 @@ fun Modifier.glassPanel(radius: Dp = 24.dp, raised: Boolean = false): Modifier =
     val glass = LocalGlass.current
     val shape = RoundedCornerShape(radius)
     val fill = if (raised) glass.fillRaised else glass.fill
-    // One flat fill. The diagonal fill gradient that used to sit here added a
-    // second highlight on top of the specular edge below; depth comes from the
-    // two elevations (fill, fillRaised) and that edge, nothing else.
     this
         .clip(shape)
-        .background(fill)
+        .background(
+            Brush.linearGradient(
+                colors = listOf(fill.copy(alpha = (fill.alpha + 0.03f).coerceAtMost(1f)), fill),
+                start = Offset.Zero,
+                end = Offset.Infinite,
+            )
+        )
         .border(
             width = 1.dp,
             brush = Brush.verticalGradient(
@@ -39,11 +44,7 @@ fun Modifier.glassPanel(radius: Dp = 24.dp, raised: Boolean = false): Modifier =
         )
 }
 
-/**
- * The quiet backdrop the glass refracts: a deep neutral vertical gradient, a
- * tone shift inside one neutral and nothing else. It used to carry a 5% teal
- * radial bloom at the top; the accent now lives only on the thing to do.
- */
+/** The quiet backdrop the glass refracts: a deep neutral vertical gradient with a faint accent bloom. */
 @Composable
 fun RelayBackground(content: @Composable () -> Unit) {
     val glass = LocalGlass.current
@@ -57,6 +58,13 @@ fun RelayBackground(content: @Composable () -> Unit) {
                         glass.backgroundBase,
                         glass.backgroundGradientBottom,
                     )
+                )
+            )
+            .background(
+                Brush.radialGradient(
+                    colors = listOf(glass.accent.copy(alpha = 0.05f), Color.Transparent),
+                    center = Offset(0.5f, 0f),
+                    radius = 1200f,
                 )
             ),
     ) {

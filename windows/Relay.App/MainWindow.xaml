@@ -56,7 +56,7 @@
                 </Grid.RowDefinitions>
 
         <!-- ===== Header: identity, live state, and the window's own controls ===== -->
-        <Grid Grid.Row="0" Margin="0,0,0,16" ColumnSpacing="8">
+        <Grid Grid.Row="0" Margin="2,0,0,18" ColumnSpacing="8">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
@@ -72,8 +72,8 @@
             <Border Grid.Column="1" x:Name="StatusChip"
                     CornerRadius="{StaticResource PillCorner}"
                     Background="{StaticResource FillTertiary}"
-                    Padding="8,4,12,4" VerticalAlignment="Center">
-                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    Padding="10,5,12,5" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
                     <Ellipse x:Name="StatusDot" Width="8" Height="8" VerticalAlignment="Center"
                              Fill="{StaticResource LabelQuaternary}" />
                     <TextBlock x:Name="StatusChipText" Style="{StaticResource CaptionText}"
@@ -106,10 +106,10 @@
         <Grid Grid.Row="1" x:Name="StateHost" MinHeight="212">
 
             <!-- Idle ────────────────────────────────────────-->
-            <StackPanel x:Name="IdlePanel" VerticalAlignment="Center" Spacing="12">
+            <StackPanel x:Name="IdlePanel" VerticalAlignment="Center" Spacing="10">
                 <TextBlock x:Name="IdleHeadline" Style="{StaticResource HeadlineText}" />
                 <TextBlock x:Name="IdleBody" Style="{StaticResource FootnoteText}"
-                           Margin="8,0,8,8" />
+                           Margin="6,0,6,6" />
 
                 <!-- Phones that are already announcing themselves, offered
                      before anything has to be typed or aimed at a camera. The
@@ -117,11 +117,11 @@
                      behind "enter a code" asked people to read two digits off a
                      screen the app was already looking at. One click is the
                      whole pairing when this list is not empty. -->
-                <StackPanel x:Name="IdleFoundPanel" Spacing="8" Visibility="Collapsed">
+                <StackPanel x:Name="IdleFoundPanel" Spacing="6" Visibility="Collapsed">
                     <TextBlock x:Name="IdleFoundHeader" Style="{StaticResource CaptionText}"
                                Foreground="{StaticResource LabelTertiary}"
                                HorizontalAlignment="Center" />
-                    <StackPanel x:Name="IdleFoundList" Spacing="8" />
+                    <StackPanel x:Name="IdleFoundList" Spacing="6" />
                 </StackPanel>
 
                 <!-- One accented action for when the list is empty or the phone
@@ -138,9 +138,9 @@
                         Visibility="Collapsed">
                 <Grid Height="252">
                     <Border CornerRadius="{StaticResource CardCorner}"
-                            Background="{StaticResource ScanBackdropBrush}"
+                            Background="#14171D"
                             BorderBrush="{StaticResource SeparatorBrush}" BorderThickness="1">
-                        <Border CornerRadius="{StaticResource CardInnerCorner}">
+                        <Border CornerRadius="15">
                             <Border.Clip>
                                 <RectangleGeometry Rect="0,0,340,250" />
                             </Border.Clip>
@@ -162,7 +162,7 @@
                           HorizontalAlignment="Center" VerticalAlignment="Center"
                           IsHitTestVisible="False">
                         <Border BorderBrush="{StaticResource AccentBrush}" BorderThickness="2.5"
-                                CornerRadius="{StaticResource ControlCorner}" Opacity="0.9" />
+                                CornerRadius="14" Opacity="0.9" />
                     </Grid>
                 </Grid>
 
@@ -198,10 +198,10 @@
                      only way in, and the two screens can be checked against
                      each other without trusting either app's prose. Rows are
                      built in code; see PopulateFoundList. -->
-                <StackPanel x:Name="FoundPanel" Spacing="8" Visibility="Collapsed">
+                <StackPanel x:Name="FoundPanel" Spacing="6" Visibility="Collapsed">
                     <TextBlock x:Name="FoundHeader" Style="{StaticResource CaptionText}"
                                Foreground="{StaticResource LabelTertiary}" />
-                    <StackPanel x:Name="FoundList" Spacing="8" />
+                    <StackPanel x:Name="FoundList" Spacing="6" />
                 </StackPanel>
 
                 <Button x:Name="CodeConnectButton" Style="{StaticResource PrimaryButton}"
@@ -232,20 +232,15 @@
             <!-- Connected ────────────────────────────────────────-->
             <StackPanel x:Name="ConnectedPanel" VerticalAlignment="Center" Spacing="8"
                         Visibility="Collapsed">
-                <!-- One solid dot, the colour of the state, beside the words
-                     that name it. It used to be three nested translucent
-                     circles with a breathing opacity: a glow, which said
-                     "alive" in the same way whether the link was healthy or
-                     not. The dot turns amber while reconnecting; the rates
-                     below are what shows it is working. MaxWidth, because a
-                     horizontal stack measures its children unbounded and a
-                     long PC name would otherwise run off the popover. -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
-                    <Ellipse x:Name="ConnectedDot" Width="8" Height="8" VerticalAlignment="Center"
+                <Grid HorizontalAlignment="Center" Width="76" Height="76" Margin="0,0,0,8">
+                    <Ellipse x:Name="ConnectedHalo" Width="76" Height="76"
+                             Fill="{StaticResource AccentFaintBrush}" />
+                    <Ellipse Width="46" Height="46" Fill="{StaticResource AccentSoftBrush}" />
+                    <Ellipse x:Name="ConnectedDot" Width="18" Height="18"
                              Fill="{StaticResource AccentBrush}" />
-                    <TextBlock x:Name="ConnectedText" Style="{StaticResource HeadlineText}"
-                               MaxWidth="296" />
-                </StackPanel>
+                </Grid>
+
+                <TextBlock x:Name="ConnectedText" Style="{StaticResource HeadlineText}" />
                 <TextBlock x:Name="ConnectedDetailText" Style="{StaticResource MonoText}"
                            HorizontalAlignment="Center" />
 
@@ -255,8 +250,8 @@
                      answer "has it been working". -->
                 <Border CornerRadius="{StaticResource SunkenCorner}"
                         Background="{StaticResource FillSunken}"
-                        Padding="16,12" Margin="0,12,0,0">
-                    <Grid ColumnSpacing="12" RowSpacing="8">
+                        Padding="14,10" Margin="0,10,0,0">
+                    <Grid ColumnSpacing="10" RowSpacing="8">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
@@ -268,9 +263,9 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock x:Name="StatDownRate" Grid.Row="0" Grid.Column="0"
-                                   Style="{StaticResource FigureText}" />
+                                   Style="{StaticResource MonoText}" />
                         <TextBlock x:Name="StatUpRate" Grid.Row="0" Grid.Column="1"
-                                   Style="{StaticResource FigureText}"
+                                   Style="{StaticResource MonoText}"
                                    HorizontalAlignment="Right" />
 
                         <TextBlock x:Name="StatDownTotal" Grid.Row="1" Grid.Column="0"
@@ -300,23 +295,21 @@
                 </Border>
 
                 <Button x:Name="DisconnectButton" Style="{StaticResource SecondaryButton}"
-                        Margin="0,16,0,0" Click="OnDisconnectClick" />
+                        Margin="0,14,0,0" Click="OnDisconnectClick" />
             </StackPanel>
 
             <!-- Error ────────────────────────────────────────-->
             <StackPanel x:Name="ErrorPanel" VerticalAlignment="Center" Spacing="12"
                         Visibility="Collapsed">
+                <Grid HorizontalAlignment="Center" Width="60" Height="60" Margin="0,0,0,4">
+                    <Ellipse Width="60" Height="60" Fill="{StaticResource DangerSoftBrush}" />
+                    <Ellipse Width="14" Height="14" Fill="{StaticResource DangerBrush}" />
+                </Grid>
                 <!-- Errors get a headline that names the problem and a body that
                      says what to do about it, instead of one undifferentiated
-                     paragraph the user has to parse under stress. The dot is
-                     the same one the header chip shows, not a second graphic. -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Spacing="8">
-                    <Ellipse Width="8" Height="8" VerticalAlignment="Center"
-                             Fill="{StaticResource DangerBrush}" />
-                    <TextBlock x:Name="ErrorTitle" Style="{StaticResource HeadlineText}"
-                               MaxWidth="296"
-                               AutomationProperties.LiveSetting="Assertive" />
-                </StackPanel>
+                     paragraph the user has to parse under stress. -->
+                <TextBlock x:Name="ErrorTitle" Style="{StaticResource HeadlineText}"
+                           AutomationProperties.LiveSetting="Assertive" />
                 <TextBlock x:Name="ErrorText" Style="{StaticResource FootnoteText}"
                            Margin="4,0,4,0" />
                 <Button x:Name="ErrorPrimaryButton" Style="{StaticResource PrimaryButton}"
@@ -334,7 +327,7 @@
                 <TextBlock x:Name="AdvancedHeader" Style="{StaticResource CaptionText}"
                            Foreground="{StaticResource LabelTertiary}" />
             </Expander.Header>
-            <StackPanel Spacing="12" Padding="4,8,4,4">
+            <StackPanel Spacing="12" Padding="2,8,2,2">
                 <!-- Which build this is, where a user can read it out. Two
                      people comparing a stale download against a current one
                      could not previously tell that was what they were doing,
@@ -384,7 +377,7 @@
                                TextWrapping="Wrap"
                                Margin="0,0,12,0" />
                     <ToggleSwitch x:Name="AdvancedLeakToggle" Grid.Column="1" HorizontalAlignment="Right"
-                                  MinWidth="0" Margin="0,-4,0,-4"
+                                  MinWidth="0" Margin="0,-6,0,-6"
                                   Toggled="OnLeakBlockToggled" />
                 </Grid>
                 <!-- Kill switch (#165). Off by default: on, a phone that stops
@@ -401,7 +394,7 @@
                                TextWrapping="Wrap"
                                Margin="0,0,12,0" />
                     <ToggleSwitch x:Name="AdvancedKillSwitchToggle" Grid.Column="1" HorizontalAlignment="Right"
-                                  MinWidth="0" Margin="0,-4,0,-4"
+                                  MinWidth="0" Margin="0,-6,0,-6"
                                   Toggled="OnKillSwitchToggled" />
                 </Grid>
                 <!-- Start with Windows. A tray app that shares a connection is
@@ -417,7 +410,7 @@
                                TextWrapping="Wrap"
                                Margin="0,0,12,0" />
                     <ToggleSwitch x:Name="AdvancedStartupToggle" Grid.Column="1" HorizontalAlignment="Right"
-                                  MinWidth="0" Margin="0,-4,0,-4"
+                                  MinWidth="0" Margin="0,-6,0,-6"
                                   Toggled="OnStartupToggled" />
                 </Grid>
                 <Grid>
@@ -437,7 +430,7 @@
                     </StackPanel>
                 </Grid>
                 <Border CornerRadius="{StaticResource SunkenCorner}"
-                        Background="{StaticResource FillSunken}" Padding="12,12">
+                        Background="{StaticResource FillSunken}" Padding="12,10">
                     <ScrollViewer Height="116" VerticalScrollBarVisibility="Auto">
                         <!-- Wrap, not NoWrap. The scroller above it only scrolls
                              vertically, so a line wider than the popover was cut
@@ -449,7 +442,7 @@
                              A 380dip popover cannot scroll sideways sensibly;
                              wrapping is what fits the surface. -->
                         <TextBlock x:Name="LogText" FontFamily="{StaticResource FontMono}"
-                                   FontSize="{StaticResource SizeCaption}" TextWrapping="Wrap"
+                                   FontSize="11" TextWrapping="Wrap"
                                    Foreground="{StaticResource LabelTertiary}" />
                     </ScrollViewer>
                 </Border>
