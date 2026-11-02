@@ -42,3 +42,6 @@ windows/**/Generated Files/
 .idea/
 .vscode/
 *.iml
+
+# --- Local Claude Code skills (third-party, not vendored) ---
+.claude/skills/unslop/
